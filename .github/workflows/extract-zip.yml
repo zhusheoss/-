@@ -1,0 +1,31 @@
+name: Extract ZIP Files
+
+on:
+  push:
+    paths:
+      - '**.zip'
+  workflow_dispatch:
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Extract ZIP files
+        run: |
+          # 解压 css.zip
+          unzip -o css.zip
+          
+          # 解压其他 ZIP 文件（如果需要）
+          unzip -o img.zip || true
+          unzip -o js.zip || true
+      
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Extract ZIP files" || exit 0
+          git push
